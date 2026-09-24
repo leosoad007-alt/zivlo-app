@@ -24,10 +24,9 @@ jobs:
 
       - name: Reparar estructura obsoleta de Android
         run: |
-          # 1. Eliminamos la carpeta de Android vieja que causa el error de Gradle soportado
+          # Eliminamos la carpeta vieja
           rm -rf android
-          
-          # 2. Obligamos a Flutter a regenerar una carpeta nativa de Android moderna y limpia
+          # Regeneramos la carpeta nativa limpia y moderna
           flutter create . --platforms=android --org com.zivlo.app
 
       - name: Instalar Dependencias Actualizadas
@@ -37,8 +36,7 @@ jobs:
           flutter pub get
 
       - name: Compilar APK (Instalador Android)
-          # Usamos --no-validate-project para saltarnos advertencias menores de configuración
-        run: flutter build apk --split-per-abi --no-validate-project
+        run: flutter build apk --split-per-abi
 
       - name: Subir APK Resultante
         uses: actions/upload-artifact@v4
