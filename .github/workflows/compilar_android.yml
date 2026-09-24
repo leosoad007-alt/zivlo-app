@@ -1,7 +1,7 @@
-name: Compilar APK de ZIVLO
+name: Compilar APK de ZIVLO Corregido
 
 on:
-  workflow_dispatch: # Esto te permite activar la compilación manualmente con un botón
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,6 +21,9 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - name: Reconstruir archivos de Android faltantes
+        run: flutter create . --platforms=android
 
       - name: Instalar dependencias del proyecto
         run: flutter pub get
