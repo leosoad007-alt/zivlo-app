@@ -1,4 +1,4 @@
-name: Compilar APK ZIVLO Estructura Kotlin
+name: Compilar APK ZIVLO Sin Optimizacion
 
 on:
   workflow_dispatch:
@@ -24,10 +24,7 @@ jobs:
 
       - name: Reparar estructura obsoleta de Android
         run: |
-          # 1. Eliminamos la carpeta vieja que causa el error de Gradle soportado
           rm -rf android
-          
-          # 2. Regeneramos la carpeta nativa limpia con la estructura moderna
           flutter create . --platforms=android --org com.zivlo.app
 
       - name: Instalar Dependencias Actualizadas
@@ -36,8 +33,8 @@ jobs:
           flutter clean
           flutter pub get
 
-      - name: Compilar APK (Instalador Android)
-        run: flutter build apk --split-per-abi
+      - name: Compilar APK (Modo Seguro de Compatibilidad)
+        run: flutter build apk --split-per-abi --no-shrink
 
       - name: Subir APK Resultante
         uses: actions/upload-artifact@v4
