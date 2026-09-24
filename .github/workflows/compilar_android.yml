@@ -1,4 +1,4 @@
-name: Reparar Gradle y Compilar APK ZIVLO
+name: Forzar SDK 34 y Compilar APK ZIVLO
 
 on:
   workflow_dispatch:
@@ -22,12 +22,17 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Reparar estructura obsoleta de Android
+      - name: Reparar estructura y Forzar Android SDK 34
         run: |
-          # Eliminamos la carpeta vieja
+          # 1. Eliminamos la carpeta vieja
           rm -rf android
-          # Regeneramos la carpeta nativa limpia y moderna
+          
+          # 2. Regeneramos la carpeta nativa limpia
           flutter create . --platforms=android --org com.zivlo.app
+          
+          # 3. Forzamos el SDK de Android 34 en el build.gradle recién creado
+          sed -i 's/compileSdk = .*/compileSdk = 34/g' android/app/build.gradle
+          sed -i 's/targetSdk = .*/targetSdk = 34/g' android/app/build.gradle
 
       - name: Instalar Dependencias Actualizadas
         run: |
