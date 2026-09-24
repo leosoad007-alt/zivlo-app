@@ -1,4 +1,4 @@
-name: Compilar APK de ZIVLO Definitivo
+name: Compilar APK de ZIVLO (Downgrade Flutter)
 
 on:
   workflow_dispatch:
@@ -17,9 +17,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Instalar Flutter
+      - name: Instalar versión estable compatible de Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.19.6' # Forzamos la versión con la que el código fue escrito
           channel: 'stable'
 
       - name: Limpiar y Obtener Dependencias
@@ -28,21 +29,12 @@ jobs:
           flutter clean
           flutter pub get
 
-      - name: Forzar compatibilidad de SDK y Gradle
-        run: |
-          # Si la carpeta android existe, nos aseguramos de que acepte compilaciones sin firmar
-          if [ -d "android" ]; then
-            find android/ -name "build.gradle" -exec sed -i 's/minifyEnabled true/minifyEnabled false/g' {} +
-          else
-            flutter create . --platforms=android
-          fi
-
-      - name: Compilar APK (Modo Release sin restricciones)
-        run: flutter build apk --no-shrink --split-per-abi
+      - name: Compilar APK (Instalador Android)
+        run: flutter build apk --split-per-abi
 
       - name: Subir instaladores como resultado
         uses: actions/upload-artifact@v4
         with:
-          name: Zivlo-APK-Final
+          name: Zivlo-APK-Forzado
           path: build/app/outputs/flutter-apk/*.apk
           
